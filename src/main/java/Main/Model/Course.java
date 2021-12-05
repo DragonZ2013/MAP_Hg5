@@ -7,7 +7,7 @@ public class Course {
     private String name;
     private int teacher;
     private int maxEnrollment;
-    private List<Student> studentsEnrolled;
+    private List<Integer> studentsEnrolled;
     private int credits;
     private int courseId;
 
@@ -42,7 +42,7 @@ public class Course {
                 ", studentsEnrolled=" + studentsEnrolled +
                 ", credits=" + credits +
                 ", courseId=" + courseId +
-                '}';
+                "}\n";
     }
 
 
@@ -55,7 +55,7 @@ public class Course {
      * @param credits
      * @param courseId
      */
-    public Course(String name, int teacher, int maxEnrollment, List<Student> studentsEnrolled, int credits, int courseId) {
+    public Course(String name, int teacher, int maxEnrollment, List<Integer> studentsEnrolled, int credits, int courseId) {
         this.name = name;
         this.teacher = teacher;
         this.maxEnrollment = maxEnrollment;
@@ -116,7 +116,7 @@ public class Course {
      * getter for Course.studentsEnrolled
      * @return List<Students>
      */
-    public List<Student> getStudentsEnrolled() {
+    public List<Integer> getStudentsEnrolled() {
         return studentsEnrolled;
     }
 
@@ -124,7 +124,7 @@ public class Course {
      * setter for Course.studentsEnrolled
      * @param studentsEnrolled
      */
-    public void setStudentsEnrolled(List<Student> studentsEnrolled) {
+    public void setStudentsEnrolled(List<Integer> studentsEnrolled) {
         this.studentsEnrolled = studentsEnrolled;
     }
 

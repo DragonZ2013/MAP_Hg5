@@ -7,10 +7,7 @@ import Main.Model.Course;
 import Main.Model.Person;
 import Main.Model.Student;
 import Main.Model.Teacher;
-import Main.Repository.CourseFileRepository;
 import Main.Repository.CrudRepository;
-import Main.Repository.StudentFileRepository;
-import Main.Repository.TeacherFileRepository;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,7 +27,7 @@ public class Controller {
      * @param sr
      * @throws IOException
      */
-    public Controller(CourseFileRepository cr, TeacherFileRepository tr, StudentFileRepository sr) throws IOException {
+    public Controller(CrudRepository<Course> cr, CrudRepository<Teacher> tr, CrudRepository<Student> sr) throws IOException {
         this.cr = cr;
         this.tr = tr;
         this.sr = sr;
@@ -47,7 +44,7 @@ public class Controller {
         for(Teacher t: tr.getAll())
             if(t.getTeacherId()==teacherId)
                 throw new ExistentIdException("Teacher Id is already in array");
-        Teacher t = new Teacher(firstName,lastName,new ArrayList<>(),teacherId);
+        Teacher t = new Teacher(firstName,lastName,teacherId);
         tr.create(t);
     }
 
@@ -99,12 +96,12 @@ public class Controller {
      * @param teacherId
      * @throws MissingIdException
      */
-    public void updateTeacher(String firstName,String lastName,int teacherId) throws MissingIdException {
+    public void updateTeacher(String firstName,String lastName,int teacherId) throws MissingIdException, SQLException {
         Teacher teacher = null;
         teacher = tr.getObject(teacherId);
         if(teacher == null)
             throw new MissingIdException("Teacher with given Id doesn't exist");
-        Teacher t = new Teacher(firstName,lastName,teacher.getCourses(),teacherId);
+        Teacher t = new Teacher(firstName,lastName,teacherId);
         tr.update(t);
     }
 
@@ -116,7 +113,7 @@ public class Controller {
      * @param totalCredits
      * @throws MissingIdException
      */
-    public void updateStudent(String firstName,String lastName,int studentId,int totalCredits) throws MissingIdException {
+    public void updateStudent(String firstName,String lastName,int studentId,int totalCredits) throws MissingIdException, SQLException {
         Student student = null;
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
@@ -140,7 +137,7 @@ public class Controller {
      * @throws MissingIdException
      * @throws MaxSizeException
      */
-    public void updateCourse(String name,int teacherId,int maxEnrollment,int credits,int courseId) throws MissingIdException, MaxSizeException {
+    public void updateCourse(String name,int teacherId,int maxEnrollment,int credits,int courseId) throws MissingIdException, MaxSizeException, SQLException {
         Course course = null;
         for(Course c: cr.getAll())
             if(c.getCourseId()==courseId)
@@ -155,13 +152,8 @@ public class Controller {
             throw new MissingIdException("Teacher with given Id doesn't exist");
         if(maxEnrollment<course.getStudentsEnrolled().size())
             throw new MaxSizeException("Student array has more elements than new Max Enrollment");
-        Teacher t = course.getTeacher();
-        t.getCourses().removeIf(teach->teach.getCourseId()==courseId);
-        tr.update(t);
-        Course c = new Course(name,teacher,maxEnrollment,course.getStudentsEnrolled(),credits,courseId);
-        teacher.getCourses().add(course);
-        Teacher teacherRet = new Teacher(teacher.getFirstName(),teacher.getLastName(),teacher.getCourses(),teacherId);
-        tr.update(teacherRet);
+
+        Course c = new Course(name,teacherId,maxEnrollment,course.getStudentsEnrolled(),credits,courseId);
         cr.update(c);
     }
 
@@ -170,18 +162,12 @@ public class Controller {
      * @param courseId
      * @throws MissingIdException
      */
-    public void deleteCourse(int courseId) throws MissingIdException {
-        Course course = null;
-        for(Course c: cr.getAll())
-            if(c.getCourseId()==courseId)
-                course = c;
-        if(course==null)
+    public void deleteCourse(int courseId) throws MissingIdException, SQLException {
+
+        Course tempCourse = cr.getObject(courseId);
+        if(tempCourse==null)
             throw new MissingIdException("Course with given Id doesn't exist");
-        for(Student s:course.getStudentsEnrolled()){
-            s.getEnrolledCourses().removeIf(o->o.getCourseId()==courseId);
-            sr.update(s);
-        }
-        cr.delete(course);
+        cr.delete(courseId);
     }
 
     /**
@@ -189,16 +175,11 @@ public class Controller {
      * @param teacherId
      * @throws MissingIdException
      */
-    public void deleteTeacher(int teacherId) throws MissingIdException {
-        Teacher teacher = null;
-        for(Teacher t: tr.getAll())
-            if(t.getTeacherId()==teacherId)
-                teacher = t;
-        if(teacher == null)
+    public void deleteTeacher(int teacherId) throws MissingIdException, SQLException {
+        Teacher tempTeacher = tr.getObject(teacherId);
+        if(tempTeacher==null)
             throw new MissingIdException("Teacher with given Id doesn't exist");
-        for(Course c:teacher.getCourses())
-            this.deleteCourse(c.getCourseId());
-        tr.delete(teacher);
+        cr.delete(teacherId);
     }
 
     /**
@@ -206,19 +187,11 @@ public class Controller {
      * @param studentId
      * @throws MissingIdException
      */
-    public void deleteStudent(int studentId) throws MissingIdException {
-        Student student = null;
-        for(Student s: sr.getAll())
-            if(s.getStudentId()==studentId)
-                student = s;
-        if(student ==null)
-            throw new MissingIdException("Student with given Id doesn't exist");
-        for(Course c: student.getEnrolledCourses()){
-            c.getStudentsEnrolled().removeIf(o->o.getStudentId()==studentId);
-            cr.update(c);
-        }
-
-        sr.delete(student);
+    public void deleteStudent(int studentId) throws MissingIdException, SQLException {
+        Student tempStudent = sr.getObject(studentId);
+        if(tempStudent==null)
+            throw new MissingIdException("Course with given Id doesn't exist");
+        cr.delete(studentId);
     }
 
     /**
@@ -229,7 +202,7 @@ public class Controller {
      * @throws MaxSizeException
      */
     public void registerStudent(int studentId,int courseId) throws MissingIdException, MaxSizeException {
-        Student student = null;
+        /*Student student = null;
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
                 student = s;
@@ -247,7 +220,7 @@ public class Controller {
         student.getEnrolledCourses().add(course);
         sr.update(student);
         course.getStudentsEnrolled().add(student);
-        cr.update(course);
+        cr.update(course);*/
 
 
 
@@ -256,7 +229,7 @@ public class Controller {
         return cr;
     }
 
-    public void setCr(CourseFileRepository cr) {
+    public void setCr(CrudRepository<Course> cr) {
         this.cr = cr;
     }
 
@@ -264,7 +237,7 @@ public class Controller {
         return tr;
     }
 
-    public void setTr(TeacherFileRepository tr) {
+    public void setTr(CrudRepository<Teacher> tr) {
         this.tr = tr;
     }
 
@@ -272,7 +245,7 @@ public class Controller {
         return sr;
     }
 
-    public void setSr(StudentFileRepository sr) {
+    public void setSr(CrudRepository<Student> sr) {
         this.sr = sr;
     }
 
@@ -281,9 +254,9 @@ public class Controller {
      * Returns the list of students sorted by their LastName - WIP - FirstName sorting, thenComparing breaks
      * @return retList List<Student>
      */
-    public List<Student> sortStudents(){
+    public List<Student> sortStudents() throws SQLException {
         List<Student> studentList = sr.getAll();
-        Comparator<Student> studentComparator = Comparator.comparing(Person::getLastName);//.thenComparing(o -> o.getFirstName());
+        Comparator<Person> studentComparator = Comparator.comparing(Person::getLastName).thenComparing(Person::getFirstName);
         return studentList.stream().sorted(studentComparator).toList();
     }
 
@@ -292,7 +265,7 @@ public class Controller {
      * @param minCredits
      * @return retList List<Student>
      */
-    public List<Student> filterStudents(int minCredits){
+    public List<Student> filterStudents(int minCredits) throws SQLException {
         List<Student> studentList = sr.getAll();
 
         return studentList.stream().filter(o->o.getTotalCredits()>=minCredits).toList();
@@ -302,9 +275,9 @@ public class Controller {
      * Returns the list of courses sorted by their credits
      * @return retList List<Course>
      */
-    public List<Course> sortCourses(){
+    public List<Course> sortCourses() throws SQLException {
         List<Course> courseList = cr.getAll();
-        Comparator<Course> courseComparator = Comparator.comparing(o -> java.lang.Integer.valueOf(o.getCredits()));
+        Comparator<Course> courseComparator = Comparator.comparing(Course::getCredits);
         return courseList.stream().sorted(courseComparator).toList();
     }
 
@@ -313,7 +286,7 @@ public class Controller {
      * @param minCredits
      * @return retList List<Course>
      */
-    public List<Course> filterCourses(int minCredits){
+    public List<Course> filterCourses(int minCredits) throws SQLException {
         List<Course> courseList = cr.getAll();
         return courseList.stream().filter(o->o.getCredits()>=minCredits).toList();
     }

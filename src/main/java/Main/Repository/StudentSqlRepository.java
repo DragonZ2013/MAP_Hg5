@@ -33,7 +33,7 @@ public class StudentSqlRepository implements CrudRepository<Student>{
     }
 
     @Override
-    public void delete(Student obj) {
+    public void delete(int id) {
 
     }
 

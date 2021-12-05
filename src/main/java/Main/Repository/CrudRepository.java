@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface CrudRepository<T> {
 
-    T getObject(int Id);
+    T getObject(int Id) throws SQLException;
 
     T create(T obj) throws SQLException;
 
-    List<T> getAll();
+    List<T> getAll() throws SQLException;
 
     T update(T obj);
 
-    void delete(T obj);
+    void delete(int id);
 
     void close() throws IOException;
 }

@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Student extends Person{
     private int studentId;
     private int totalCredits;
-    private List<java.lang.Integer> enrolledCourses;
+    private List<Integer> enrolledCourses;
 
     /**
      * Constructor for Student objects
@@ -54,7 +54,7 @@ public class Student extends Person{
                 ", enrolledCourses=" + coursesToId() +
                 ", firstName=" + this.getFirstName()+
                 ", lastName=" + this.getLastName()+
-                '}';
+                "}\n";
     }
 
     /**
@@ -62,10 +62,7 @@ public class Student extends Person{
      * @return List<Integer>
      */
     public List<java.lang.Integer> coursesToId(){
-        List<java.lang.Integer> retList = new ArrayList<>();
-        for(java.lang.Integer c : this.enrolledCourses)
-            retList.add(c.getCourseId());
-        return retList;
+        return enrolledCourses;
     }
 
     /**
@@ -104,7 +101,7 @@ public class Student extends Person{
      * getter for Student.enrolledCourses
      * @return List<Course>
      */
-    public List<java.lang.Integer> getEnrolledCourses() {
+    public List<Integer> getEnrolledCourses() {
         return enrolledCourses;
     }
 
@@ -112,7 +109,7 @@ public class Student extends Person{
      * setter for Student.enrolledCourses
      * @param enrolledCourses
      */
-    public void setEnrolledCourses(List<java.lang.Integer> enrolledCourses) {
+    public void setEnrolledCourses(List<Integer> enrolledCourses) {
         this.enrolledCourses = enrolledCourses;
     }
 }

@@ -4,11 +4,14 @@ import Main.Controller.Controller;
 import Main.Exceptions.ExistentIdException;
 import Main.Exceptions.MaxSizeException;
 import Main.Exceptions.MissingIdException;
+import Main.Model.*;
 import Main.Repository.*;
 import Main.UI.ConsoleView;
 
 import java.io.IOException;
+import java.lang.annotation.Target;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -35,9 +38,17 @@ public class Main {
         while(resultSet.next()){
             System.out.println(resultSet.getString("id")+" "+resultSet.getString("firstname")+" "+resultSet.getString("lastname"));
         }
-
         connection.close();
 
+        System.out.println(cr.getAll());
+        System.out.println(cr.getObject(1));
+        System.out.println(cr.getObject(2));
+        System.out.println(cr.getObject(5));
+        System.out.println(cr.getObject(6));
+        //Course c = new Course("Sisteme de operare",3,20,new ArrayList<>(),35,3);
+        //cr.create(c);
+        System.out.println(cr.getObject(3));
+        System.out.println(cr.getObject(4));
 
     }
 }

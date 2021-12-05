@@ -14,7 +14,7 @@ public class Person {
         return "Person{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                '}';
+                "}\n";
     }
 
     /**
