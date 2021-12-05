@@ -11,16 +11,18 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.*;
 import java.util.ArrayList;
 
-public class CourseRepository extends InMemoryRepository<Course> implements FileRepository{
+public class CourseFileRepository extends InMemoryRepository<Course> implements FileRepository<Course>{
 
+    private String filename;
     /**
      * Constructor for CourseRepository Objects + File initializer
      * @param filename
      * @throws IOException
      */
-    public CourseRepository(TeacherRepository teacherRepository,String filename) throws IOException {
+    public CourseFileRepository(TeacherFileRepository teacherFileRepository, String filename) throws IOException {
         super();
 
+        this.filename = filename;
         BufferedReader fixReader = new BufferedReader(new FileReader(filename));
 
         String line = fixReader.readLine().replace("\\","");
@@ -42,15 +44,15 @@ public class CourseRepository extends InMemoryRepository<Course> implements File
         for (JsonNode n: parser ){
             Teacher tempTeacher = null;
             int teacherId = n.path("teacher").asInt();
-            for(Teacher t: teacherRepository.getAll())
+            for(Teacher t: teacherFileRepository.getAll())
                 if(t.getTeacherId()==teacherId)
                     tempTeacher=t;
             Course c = new Course(n.path("name").asText(),tempTeacher,n.path("maxEnrollment").asInt(),new ArrayList(),n.path("credits").asInt(),n.path("courseId").asInt());
             this.create(c);
             tempTeacher.getCourses().add(c);
-            teacherRepository.update(tempTeacher);
+            teacherFileRepository.update(tempTeacher);
         }
-        this.close(filename);
+        this.close();
     }
 
     /**
@@ -75,11 +77,11 @@ public class CourseRepository extends InMemoryRepository<Course> implements File
 
     /**
      * saves the CourseRepository to given path
-     * @param filename
+     *
      * @throws IOException
      */
     @Override
-    public void close(String filename) throws IOException {
+    public void close() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
@@ -93,7 +95,7 @@ public class CourseRepository extends InMemoryRepository<Course> implements File
 
             serializedCourse += ",";
 
-            writer.writeValue(new File(filename),serializedCourse);
+            writer.writeValue(new File(this.filename),serializedCourse);
 
         }
 

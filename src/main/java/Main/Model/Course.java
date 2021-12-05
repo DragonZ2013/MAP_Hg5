@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Course {
     private String name;
-    private Teacher teacher;
+    private int teacher;
     private int maxEnrollment;
     private List<Student> studentsEnrolled;
     private int credits;
@@ -55,7 +55,7 @@ public class Course {
      * @param credits
      * @param courseId
      */
-    public Course(String name, Teacher teacher, int maxEnrollment, List<Student> studentsEnrolled, int credits, int courseId) {
+    public Course(String name, int teacher, int maxEnrollment, List<Student> studentsEnrolled, int credits, int courseId) {
         this.name = name;
         this.teacher = teacher;
         this.maxEnrollment = maxEnrollment;
@@ -84,7 +84,7 @@ public class Course {
      * getter for Course.teacher
      * @return Teacher
      */
-    public Teacher getTeacher() {
+    public int getTeacher() {
         return teacher;
     }
 
@@ -92,7 +92,7 @@ public class Course {
      * setter for Course.teacher
      * @param teacher
      */
-    public void setTeacher(Teacher teacher) {
+    public void setTeacher(int teacher) {
         this.teacher = teacher;
     }
 

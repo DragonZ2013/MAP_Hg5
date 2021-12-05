@@ -7,19 +7,21 @@ import Main.Model.Course;
 import Main.Model.Person;
 import Main.Model.Student;
 import Main.Model.Teacher;
-import Main.Repository.CourseRepository;
-import Main.Repository.StudentRepository;
-import Main.Repository.TeacherRepository;
+import Main.Repository.CourseFileRepository;
+import Main.Repository.CrudRepository;
+import Main.Repository.StudentFileRepository;
+import Main.Repository.TeacherFileRepository;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Controller {
-    private TeacherRepository tr;
-    private CourseRepository cr;
-    private StudentRepository sr;
+    private CrudRepository<Teacher> tr;
+    private CrudRepository<Course> cr;
+    private CrudRepository<Student> sr;
 
     /**
      * Constructor for controller objects
@@ -28,7 +30,7 @@ public class Controller {
      * @param sr
      * @throws IOException
      */
-    public Controller(CourseRepository cr, TeacherRepository tr, StudentRepository sr) throws IOException {
+    public Controller(CourseFileRepository cr, TeacherFileRepository tr, StudentFileRepository sr) throws IOException {
         this.cr = cr;
         this.tr = tr;
         this.sr = sr;
@@ -41,7 +43,7 @@ public class Controller {
      * @param teacherId
      * @throws ExistentIdException
      */
-    public void createTeacher(String firstName,String lastName,int teacherId) throws ExistentIdException {
+    public void createTeacher(String firstName,String lastName,int teacherId) throws ExistentIdException, SQLException {
         for(Teacher t: tr.getAll())
             if(t.getTeacherId()==teacherId)
                 throw new ExistentIdException("Teacher Id is already in array");
@@ -57,7 +59,7 @@ public class Controller {
      * @param totalCredits
      * @throws ExistentIdException
      */
-    public void createStudent(String firstName,String lastName,int studentId,int totalCredits) throws ExistentIdException {
+    public void createStudent(String firstName,String lastName,int studentId,int totalCredits) throws ExistentIdException, SQLException {
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
                 throw new ExistentIdException("Student Id is already in array");
@@ -76,22 +78,17 @@ public class Controller {
      * @throws ExistentIdException
      * @throws MissingIdException
      */
-    public void createCourse(String name,int teacherId,int maxEnrollment,int credits,int courseId) throws ExistentIdException, MissingIdException {
+    public void createCourse(String name,int teacherId,int maxEnrollment,int credits,int courseId) throws ExistentIdException, MissingIdException, SQLException {
         for(Course c: cr.getAll())
             if(c.getCourseId()==courseId)
                 throw new ExistentIdException("Course Id is already in array");
         Teacher teacher = null;
-        for(Teacher t:tr.getAll())
-            if(t.getTeacherId()==teacherId)
-                teacher=t;
+        teacher = tr.getObject(teacherId);
         if(teacher==null)
             throw new MissingIdException("Teacher with given Id doesn't exist");
 
-        Course c = new Course(name,teacher,maxEnrollment,new ArrayList<>(),credits,courseId);
-
+        Course c = new Course(name,teacherId,maxEnrollment,new ArrayList<>(),credits,courseId);
         cr.create(c);
-        teacher.getCourses().add(c);
-        tr.update(teacher);
     }
 
 
@@ -104,9 +101,7 @@ public class Controller {
      */
     public void updateTeacher(String firstName,String lastName,int teacherId) throws MissingIdException {
         Teacher teacher = null;
-        for(Teacher t: tr.getAll())
-            if(t.getTeacherId()==teacherId)
-                teacher = t;
+        teacher = tr.getObject(teacherId);
         if(teacher == null)
             throw new MissingIdException("Teacher with given Id doesn't exist");
         Teacher t = new Teacher(firstName,lastName,teacher.getCourses(),teacherId);
@@ -126,11 +121,11 @@ public class Controller {
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
                 student = s;
-        if(student==null)
+        if(student ==null)
         {
             throw new MissingIdException("Student with given Id doesn't exist");
         }
-        Student s = new Student(firstName,lastName,studentId,totalCredits,student.getEnrolledCourses());
+        Student s = new Student(firstName,lastName,studentId,totalCredits, student.getEnrolledCourses());
         sr.update(s);
 
     }
@@ -216,9 +211,9 @@ public class Controller {
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
                 student = s;
-        if(student==null)
+        if(student ==null)
             throw new MissingIdException("Student with given Id doesn't exist");
-        for(Course c:student.getEnrolledCourses()){
+        for(Course c: student.getEnrolledCourses()){
             c.getStudentsEnrolled().removeIf(o->o.getStudentId()==studentId);
             cr.update(c);
         }
@@ -238,7 +233,7 @@ public class Controller {
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
                 student = s;
-        if(student==null)
+        if(student ==null)
             throw new MissingIdException("Student with given Id doesn't exist");
         Course course = null;
         for(Course c: cr.getAll())
@@ -257,27 +252,27 @@ public class Controller {
 
 
     }
-    public CourseRepository getCr() {
+    public CrudRepository<Course> getCr() {
         return cr;
     }
 
-    public void setCr(CourseRepository cr) {
+    public void setCr(CourseFileRepository cr) {
         this.cr = cr;
     }
 
-    public TeacherRepository getTr() {
+    public CrudRepository<Teacher> getTr() {
         return tr;
     }
 
-    public void setTr(TeacherRepository tr) {
+    public void setTr(TeacherFileRepository tr) {
         this.tr = tr;
     }
 
-    public StudentRepository getSr() {
+    public CrudRepository<Student> getSr() {
         return sr;
     }
 
-    public void setSr(StudentRepository sr) {
+    public void setSr(StudentFileRepository sr) {
         this.sr = sr;
     }
 
@@ -309,7 +304,7 @@ public class Controller {
      */
     public List<Course> sortCourses(){
         List<Course> courseList = cr.getAll();
-        Comparator<Course> courseComparator = Comparator.comparing(o -> Integer.valueOf(o.getCredits()));
+        Comparator<Course> courseComparator = Comparator.comparing(o -> java.lang.Integer.valueOf(o.getCredits()));
         return courseList.stream().sorted(courseComparator).toList();
     }
 
@@ -327,11 +322,7 @@ public class Controller {
      * Saves all repositories in their current state
      * @throws IOException
      */
-    public void SaveAll() throws IOException {
-        sr.close("StudentData.json");
-        cr.close("CourseData.json");
-        tr.close("TeacherData.json");
-    }
+
 
 
 

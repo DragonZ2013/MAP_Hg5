@@ -10,16 +10,19 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.*;
 import java.util.ArrayList;
 
-public class TeacherRepository extends InMemoryRepository<Teacher> implements FileRepository<Teacher>{
+public class TeacherFileRepository extends InMemoryRepository<Teacher> implements FileRepository<Teacher>{
 
+
+    private String filename;
 
     /**
      * Constructor for TeacherRepository Objects + File initializer
      * @param filename
      * @throws IOException
      */
-    public TeacherRepository(String filename) throws IOException {
+    public TeacherFileRepository(String filename) throws IOException {
         super();
+        this.filename=filename;
 
         BufferedReader fixReader = new BufferedReader(new FileReader(filename));
 
@@ -44,7 +47,7 @@ public class TeacherRepository extends InMemoryRepository<Teacher> implements Fi
             Teacher t = new Teacher(n.path("firstName").asText(),n.path("lastName").asText(),new ArrayList(),n.path("teacherId").asInt());
             this.create(t);
         }
-        this.close(filename);
+        this.close();
 
     }
 
@@ -68,11 +71,11 @@ public class TeacherRepository extends InMemoryRepository<Teacher> implements Fi
 
     /**
      * Saves the TeacherRepository at given path
-     * @param filename
+     *
      * @throws IOException
      */
     @Override
-    public void close(String filename) throws IOException {
+    public void close() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
@@ -86,7 +89,7 @@ public class TeacherRepository extends InMemoryRepository<Teacher> implements Fi
 
             serializedTeacher += ",";
 
-            writer.writeValue(new File(filename),serializedTeacher);
+            writer.writeValue(new File(this.filename),serializedTeacher);
 
         }
     }

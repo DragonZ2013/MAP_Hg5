@@ -23,12 +23,12 @@ public class StudentSerializer extends JsonSerializer<Student> {
     public void serialize(Student student, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeNumberField("studentId",student.getStudentId());
-        jsonGenerator.writeStringField("firstName",student.getFirstName());
-        jsonGenerator.writeStringField("lastName",student.getLastName());
-        jsonGenerator.writeNumberField("totalCredits",student.getTotalCredits());
-        List<Integer> idList = new ArrayList<>();
-        for (Course c :student.getEnrolledCourses())
+        jsonGenerator.writeNumberField("studentId", student.getStudentId());
+        jsonGenerator.writeStringField("firstName", student.getFirstName());
+        jsonGenerator.writeStringField("lastName", student.getLastName());
+        jsonGenerator.writeNumberField("totalCredits", student.getTotalCredits());
+        List<java.lang.Integer> idList = new ArrayList<>();
+        for (Course c : student.getEnrolledCourses())
             idList.add(c.getCourseId());
         jsonGenerator.writeStringField("enrolledCourses",String.valueOf(idList));
         jsonGenerator.writeEndObject();

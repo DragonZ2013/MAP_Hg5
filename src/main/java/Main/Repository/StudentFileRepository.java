@@ -13,16 +13,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StudentRepository extends InMemoryRepository<Student> implements FileRepository<Student>{
+public class StudentFileRepository extends InMemoryRepository<Student> implements FileRepository<Student>{
 
+
+    private String filename;
     /**
      * Constructor for StudentRepository Objects + File initializer
      * @param filename
      * @throws IOException
      */
-    public StudentRepository(CourseRepository courseRepository,String filename) throws IOException {
+    public StudentFileRepository(CourseFileRepository courseFileRepository, String filename) throws IOException {
         super();
 
+        this.filename=filename;
         BufferedReader fixReader = new BufferedReader(new FileReader(filename));
 
         String line = fixReader.readLine().replace("\\","");
@@ -45,9 +48,9 @@ public class StudentRepository extends InMemoryRepository<Student> implements Fi
             List<Course> tempCourses = new ArrayList<>();
             String courses = n.path("enrolledCourses").asText();
             String[] splitCourses = courses.replace("[","").replace("]","").replace(" ","").split(",");
-            List<Integer> coursesId = new ArrayList<>(Arrays.asList(splitCourses)).stream().map(Integer::valueOf).toList();
-            for (Course c: courseRepository.getAll())
-                for(Integer cId: coursesId)
+            List<java.lang.Integer> coursesId = new ArrayList<>(Arrays.asList(splitCourses)).stream().map(java.lang.Integer::valueOf).toList();
+            for (Course c: courseFileRepository.getAll())
+                for(java.lang.Integer cId: coursesId)
                     if(cId==c.getCourseId())
                         tempCourses.add(c);
             Student s = new Student(n.path("firstName").asText(),n.path("lastName").asText(),n.path("studentId").asInt(),n.path("totalCredits").asInt(),tempCourses);
@@ -55,11 +58,11 @@ public class StudentRepository extends InMemoryRepository<Student> implements Fi
             for(Course c:tempCourses)
             {
                 c.getStudentsEnrolled().add(s);
-                courseRepository.update(c);
+                courseFileRepository.update(c);
             }
 
         }
-        this.close(filename);
+        this.close();
     }
 
     /**
@@ -78,16 +81,18 @@ public class StudentRepository extends InMemoryRepository<Student> implements Fi
         studentToUpdate.setFirstName(obj.getFirstName());
         studentToUpdate.setLastName(obj.getLastName());
 
+
         return studentToUpdate;
+
     }
 
     /**
      * Saves the StudentRepository to given path
-     * @param filename
+     *
      * @throws IOException
      */
     @Override
-    public void close(String filename) throws IOException {
+    public void close() throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -102,7 +107,7 @@ public class StudentRepository extends InMemoryRepository<Student> implements Fi
 
             serializedStudent += ",";
 
-            writer.writeValue(new File(filename),serializedStudent);
+            writer.writeValue(new File(this.filename),serializedStudent);
 
         }
 

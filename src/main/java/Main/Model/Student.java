@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Student extends Person{
     private int studentId;
     private int totalCredits;
-    private List<Course> enrolledCourses;
+    private List<java.lang.Integer> enrolledCourses;
 
     /**
      * Constructor for Student objects
@@ -17,7 +17,7 @@ public class Student extends Person{
      * @param totalCredits
      * @param enrolledCourses
      */
-    public Student(String firstName, String lastName, int studentId, int totalCredits, List<Course> enrolledCourses) {
+    public Student(String firstName, String lastName, int studentId, int totalCredits, List<java.lang.Integer> enrolledCourses) {
         super(firstName, lastName);
         this.studentId = studentId;
         this.totalCredits = totalCredits;
@@ -61,9 +61,9 @@ public class Student extends Person{
      * Converts the course array to an int array, used to avoid recursive printing
      * @return List<Integer>
      */
-    public List<Integer> coursesToId(){
-        List<Integer> retList = new ArrayList<>();
-        for(Course c : this.enrolledCourses)
+    public List<java.lang.Integer> coursesToId(){
+        List<java.lang.Integer> retList = new ArrayList<>();
+        for(java.lang.Integer c : this.enrolledCourses)
             retList.add(c.getCourseId());
         return retList;
     }
@@ -104,7 +104,7 @@ public class Student extends Person{
      * getter for Student.enrolledCourses
      * @return List<Course>
      */
-    public List<Course> getEnrolledCourses() {
+    public List<java.lang.Integer> getEnrolledCourses() {
         return enrolledCourses;
     }
 
@@ -112,7 +112,7 @@ public class Student extends Person{
      * setter for Student.enrolledCourses
      * @param enrolledCourses
      */
-    public void setEnrolledCourses(List<Course> enrolledCourses) {
+    public void setEnrolledCourses(List<java.lang.Integer> enrolledCourses) {
         this.enrolledCourses = enrolledCourses;
     }
 }
