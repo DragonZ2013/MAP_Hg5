@@ -16,12 +16,23 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     private String connUser;
     private String connPassword;
 
+    /**
+     * Constructor for CourseSqlRepository
+     * @param connUrl
+     * @param connUser
+     * @param connPassword
+     */
     public CourseSqlRepository(String connUrl, String connUser, String connPassword) {
         this.connUrl = connUrl;
         this.connUser = connUser;
         this.connPassword = connPassword;
     }
 
+    /**
+     * Adds a course to the MySQL database
+     * @param obj
+     * @throws SQLException
+     */
     @Override
     public void create(Course obj) throws SQLException {
 
@@ -36,6 +47,11 @@ public class CourseSqlRepository implements CrudRepository<Course>{
         preparedStatement.execute();
     }
 
+    /**
+     * Returns the array of courses from the MySQL database
+     * @return
+     * @throws SQLException
+     */
     @Override
     public List<Course> getAll() throws SQLException {
         List<Course> courseList= new ArrayList<Course>();
@@ -56,6 +72,11 @@ public class CourseSqlRepository implements CrudRepository<Course>{
         return courseList;
     }
 
+    /**
+     * Updates an element in the MySQL database with the same Id as param course
+     * @param obj
+     * @throws SQLException
+     */
     @Override
     public void update(Course obj) throws SQLException {
 
@@ -71,16 +92,31 @@ public class CourseSqlRepository implements CrudRepository<Course>{
         preparedStatement.execute();
     }
 
+    /**
+     * removes the element with given id from the MySQL database
+     * @param id
+     * @throws SQLException
+     */
     @Override
     public void delete(int id) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
+        String collapseQuery = "delete from enrolledstudents where courseid=?";
+        PreparedStatement preparedStatementCollapse = connection.prepareStatement(collapseQuery);
         String query = "delete from courses where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1,id);
+        preparedStatementCollapse.setInt(1,id);
+        preparedStatementCollapse.execute();
         preparedStatement.execute();
 
     }
 
+    /**
+     * Returns the element from the database with the given Id
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Course getObject(int id) throws SQLException {
         Course retCourse = null;

@@ -53,14 +53,13 @@ public class Controller {
      * @param firstName
      * @param lastName
      * @param studentId
-     * @param totalCredits
      * @throws ExistentIdException
      */
-    public void createStudent(String firstName,String lastName,int studentId,int totalCredits) throws ExistentIdException, SQLException {
+    public void createStudent(String firstName,String lastName,int studentId) throws ExistentIdException, SQLException {
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
                 throw new ExistentIdException("Student Id is already in array");
-        Student s = new Student(firstName,lastName,studentId,totalCredits,new ArrayList<>());
+        Student s = new Student(firstName,lastName,studentId,0,new ArrayList<>());
         sr.create(s);
 
     }
@@ -158,7 +157,7 @@ public class Controller {
     }
 
     /**
-     * removes a course object from the CourseRepository
+     * removes a course object from the CourseRepository, also removes course from students courselist
      * @param courseId
      * @throws MissingIdException
      */
@@ -168,10 +167,15 @@ public class Controller {
         if(tempCourse==null)
             throw new MissingIdException("Course with given Id doesn't exist");
         cr.delete(courseId);
+        for(int i:tempCourse.getStudentsEnrolled()){
+            Student tempStudent = sr.getObject(i);
+            tempStudent.setTotalCredits(tempStudent.getTotalCredits()-tempCourse.getCredits());
+            sr.update(tempStudent);
+        }
     }
 
     /**
-     * removes a teacher object from the teacher repository
+     * removes a teacher object from the teacher repository, will not delete if any course depends on given teacher (WIP - to decide if collapse is necessary)
      * @param teacherId
      * @throws MissingIdException
      */
@@ -179,11 +183,11 @@ public class Controller {
         Teacher tempTeacher = tr.getObject(teacherId);
         if(tempTeacher==null)
             throw new MissingIdException("Teacher with given Id doesn't exist");
-        cr.delete(teacherId);
+        tr.delete(teacherId);
     }
 
     /**
-     * removes a student object from the StudentRepository
+     * removes a student object from the StudentRepository, also removes student from courses enrolledlist
      * @param studentId
      * @throws MissingIdException
      */
@@ -191,7 +195,7 @@ public class Controller {
         Student tempStudent = sr.getObject(studentId);
         if(tempStudent==null)
             throw new MissingIdException("Course with given Id doesn't exist");
-        cr.delete(studentId);
+        sr.delete(studentId);
     }
 
     /**
@@ -286,9 +290,31 @@ public class Controller {
     }
 
     /**
-     * Saves all repositories in their current state
-     * @throws IOException
+     * Returns the array of courses
+     * @return List<Course>
+     * @throws SQLException
      */
+    public List<Course> listCourses() throws SQLException {
+        return cr.getAll();
+    }
+
+    /**
+     * Returns the array of students
+     * @return List<Student>
+     * @throws SQLException
+     */
+    public List<Student> listStudents() throws SQLException{
+        return sr.getAll();
+    }
+
+    /**
+     * Returns the array of teachers
+     * @return
+     * @throws SQLException
+     */
+    public List<Teacher> listTeachers() throws SQLException{
+        return tr.getAll();
+    }
 
 
 

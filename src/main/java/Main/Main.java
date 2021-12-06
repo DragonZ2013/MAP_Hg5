@@ -15,9 +15,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-    /**
-     * !!! REPOSITORIES MUST BE LOADED IN ORDER: TEACHER -> COURSE -> STUDENT
-     */
+
     public static void main(String[] args) throws IOException, ExistentIdException, MissingIdException, MaxSizeException, SQLException {
 
         /*

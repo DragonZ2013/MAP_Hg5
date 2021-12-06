@@ -94,9 +94,9 @@ public class ConsoleView {
                         studentLastName= scanner.next();
                         System.out.println("Give Student Id");
                         studentId=Integer.parseInt(scanner.next());
-                        System.out.println("Give Student Max Credits");
-                        studentTotalCredits=Integer.parseInt(scanner.next());
-                        controller.createStudent(studentFirstName,studentLastName,studentId,studentTotalCredits);
+                        //System.out.println("Give Student Max Credits");
+                        //studentTotalCredits=Integer.parseInt(scanner.next());
+                        controller.createStudent(studentFirstName,studentLastName,studentId);
                         break;
                     case "8":
                         System.out.println("Give Student First Name");
@@ -138,15 +138,15 @@ public class ConsoleView {
                         System.out.println(controller.filterStudents(filterParam));
                         break;
                     case "15":
-                        for(Teacher t:controller.getTr().getAll())
+                        for(Teacher t:controller.listTeachers())
                             System.out.println(t);
                         break;
                     case "16":
-                        for(Course c:controller.getCr().getAll())
+                        for(Course c:controller.listCourses())
                             System.out.println(c);
                         break;
                     case "17":
-                        for(Student s:controller.getSr().getAll())
+                        for(Student s:controller.listStudents())
                             System.out.println(s);
                         break;
                     case "18":

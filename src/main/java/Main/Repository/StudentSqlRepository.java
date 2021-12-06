@@ -77,8 +77,12 @@ public class StudentSqlRepository implements CrudRepository<Student>{
     public void delete(int id) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         String query = "delete from students where id=?";
+        String collapseQuery = "delete from enrolledstudents where studentid=?";
+        PreparedStatement preparedStatementCollapse = connection.prepareStatement(collapseQuery);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1,id);
+        preparedStatementCollapse.setInt(1,id);
+        preparedStatementCollapse.execute();
         preparedStatement.execute();
 
     }
