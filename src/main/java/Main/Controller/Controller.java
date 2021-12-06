@@ -201,26 +201,20 @@ public class Controller {
      * @throws MissingIdException
      * @throws MaxSizeException
      */
-    public void registerStudent(int studentId,int courseId) throws MissingIdException, MaxSizeException {
-        /*Student student = null;
-        for(Student s: sr.getAll())
-            if(s.getStudentId()==studentId)
-                student = s;
+    public void registerStudent(int studentId,int courseId) throws MissingIdException, MaxSizeException, SQLException, ExistentIdException {
+        Student student = sr.getObject(studentId);
         if(student ==null)
             throw new MissingIdException("Student with given Id doesn't exist");
-        Course course = null;
-        for(Course c: cr.getAll())
-            if(c.getCourseId()==courseId)
-                course = c;
+        Course course = cr.getObject(courseId);
         if(course==null)
             throw new MissingIdException("Course with given Id doesn't exist");
         if(course.getMaxEnrollment()==course.getStudentsEnrolled().size())
             throw new MaxSizeException("Course already hax maximum number of students enrolled");
+        if(student.getEnrolledCourses().contains(courseId))
+            throw new ExistentIdException("Student already enrolled to given course");
         student.setTotalCredits(student.getTotalCredits()+course.getCredits());
-        student.getEnrolledCourses().add(course);
+        student.getEnrolledCourses().add(courseId);
         sr.update(student);
-        course.getStudentsEnrolled().add(student);
-        cr.update(course);*/
 
 
 

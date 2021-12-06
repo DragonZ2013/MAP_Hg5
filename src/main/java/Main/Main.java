@@ -33,6 +33,10 @@ public class Main {
         CourseSqlRepository cr = new CourseSqlRepository("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         StudentSqlRepository sr = new StudentSqlRepository("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
 
+        Controller cont = new Controller(cr,tr,sr);
+        ConsoleView cw = new ConsoleView(cont);
+        cw.Run();
+        /*
 
         for(Course c:cr.getAll())
             System.out.println(c);
@@ -54,7 +58,7 @@ public class Main {
         System.out.println(cr.getObject(3));
         c.setMaxEnrollment(30);
         cr.update(c);
-        System.out.println(cr.getObject(3));
+        System.out.println(cr.getObject(3));*/
 
     }
 }

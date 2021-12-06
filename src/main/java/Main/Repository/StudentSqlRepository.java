@@ -58,11 +58,18 @@ public class StudentSqlRepository implements CrudRepository<Student>{
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         String query = "update students set firstname=?,lastname=?,totalcredits=? where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setInt(3,obj.getStudentId());
+        preparedStatement.setInt(4,obj.getStudentId());
         preparedStatement.setString(1,obj.getFirstName());
         preparedStatement.setString(2,obj.getLastName());
         preparedStatement.setInt(3,obj.getTotalCredits());
+        String registerQuery = "insert ignore into enrolledstudents(studentid,courseid) values(?,?)";
+        PreparedStatement registerPreparedStatement = connection.prepareStatement(registerQuery);
+        for(int courseId:obj.getEnrolledCourses()){
 
+            registerPreparedStatement.setInt(1,obj.getStudentId());
+            registerPreparedStatement.setInt(2,courseId);
+            registerPreparedStatement.execute();
+        }
         preparedStatement.execute();
     }
 

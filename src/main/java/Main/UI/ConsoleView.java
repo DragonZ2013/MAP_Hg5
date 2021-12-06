@@ -4,6 +4,9 @@ import Main.Controller.Controller;
 import Main.Exceptions.ExistentIdException;
 import Main.Exceptions.MaxSizeException;
 import Main.Exceptions.MissingIdException;
+import Main.Model.Course;
+import Main.Model.Student;
+import Main.Model.Teacher;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -135,13 +138,16 @@ public class ConsoleView {
                         System.out.println(controller.filterStudents(filterParam));
                         break;
                     case "15":
-                        System.out.println(controller.getTr().getAll());
+                        for(Teacher t:controller.getTr().getAll())
+                            System.out.println(t);
                         break;
                     case "16":
-                        System.out.println(controller.getCr().getAll());
+                        for(Course c:controller.getCr().getAll())
+                            System.out.println(c);
                         break;
                     case "17":
-                        System.out.println(controller.getSr().getAll());
+                        for(Student s:controller.getSr().getAll())
+                            System.out.println(s);
                         break;
                     case "18":
                         continueLoop=0;
@@ -152,6 +158,7 @@ public class ConsoleView {
             }
             catch (ExistentIdException | MissingIdException | MaxSizeException | SQLException e)
             {
+                System.out.println(e.getMessage());
                 System.out.println("Incorrect parameters, try again");
 
             }
