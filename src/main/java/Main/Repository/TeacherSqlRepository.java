@@ -74,11 +74,11 @@ public class TeacherSqlRepository implements CrudRepository<Teacher>{
     }
 
     @Override
-    public Teacher getObject(int Id) throws SQLException {
+    public Teacher getObject(int id) throws SQLException {
         Teacher retTeacher = null;
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from teachers");
+        ResultSet resultSet = statement.executeQuery("select * from teachers where id= "+ id);
         while(resultSet.next()){
             retTeacher = new Teacher(resultSet.getString("firstname"),resultSet.getString("lastname"),resultSet.getInt("id"));
         }

@@ -42,7 +42,7 @@ public class Course {
                 ", studentsEnrolled=" + studentsEnrolled +
                 ", credits=" + credits +
                 ", courseId=" + courseId +
-                "}\n";
+                "}";
     }
 
 

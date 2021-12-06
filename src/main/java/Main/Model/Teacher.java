@@ -33,7 +33,7 @@ public class Teacher extends Person{
     @Override
     public String toString() {
         return "Teacher{" +
-                ", teacherId=" + teacherId +
+                "teacherId=" + teacherId +
                 ", firstName=" + this.getFirstName()+
                 ", lastName=" + this.getLastName()+
                 '}';

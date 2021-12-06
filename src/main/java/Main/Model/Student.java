@@ -54,7 +54,7 @@ public class Student extends Person{
                 ", enrolledCourses=" + coursesToId() +
                 ", firstName=" + this.getFirstName()+
                 ", lastName=" + this.getLastName()+
-                "}\n";
+                "}";
     }
 
     /**

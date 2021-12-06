@@ -32,16 +32,16 @@ public class Main {
         TeacherSqlRepository tr = new TeacherSqlRepository("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         CourseSqlRepository cr = new CourseSqlRepository("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         StudentSqlRepository sr = new StudentSqlRepository("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from students");
-        while(resultSet.next()){
-            System.out.println(resultSet.getString("id")+" "+resultSet.getString("firstname")+" "+resultSet.getString("lastname"));
-        }
-        connection.close();
 
-        System.out.println(cr.getAll());
 
+        for(Course c:cr.getAll())
+            System.out.println(c);
+        for(Student s:sr.getAll())
+            System.out.println(s);
+        for(Teacher t:tr.getAll())
+            System.out.println(t);
+
+        System.out.println();
         System.out.println(cr.getObject(4));
         System.out.println(cr.getObject(1));
         System.out.println(cr.getObject(2));
