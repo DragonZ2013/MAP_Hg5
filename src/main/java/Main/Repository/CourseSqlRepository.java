@@ -23,7 +23,7 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     }
 
     @Override
-    public Course create(Course obj) throws SQLException {
+    public void create(Course obj) throws SQLException {
 
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         String query = "insert into courses(id,coursename,teacherid,maxenrollment,credits) values(?,?,?,?,?)";
@@ -34,7 +34,6 @@ public class CourseSqlRepository implements CrudRepository<Course>{
         preparedStatement.setInt(4,obj.getMaxEnrollment());
         preparedStatement.setInt(5,obj.getCredits());
         preparedStatement.execute();
-        return null;
     }
 
     @Override
@@ -58,7 +57,7 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     }
 
     @Override
-    public Course update(Course obj) throws SQLException {
+    public void update(Course obj) throws SQLException {
 
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         String query = "update courses set coursename=?,teacherid=?,maxenrollment=?,credits=? where id=?";
@@ -70,7 +69,6 @@ public class CourseSqlRepository implements CrudRepository<Course>{
         preparedStatement.setInt(4,obj.getCredits());
 
         preparedStatement.execute();
-        return null;
     }
 
     @Override

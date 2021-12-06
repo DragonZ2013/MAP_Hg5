@@ -8,11 +8,11 @@ public interface CrudRepository<T> {
 
     T getObject(int Id) throws SQLException;
 
-    T create(T obj) throws SQLException;
+    void create(T obj) throws SQLException;
 
     List<T> getAll() throws SQLException;
 
-    T update(T obj) throws SQLException;
+    void update(T obj) throws SQLException;
 
     void delete(int id) throws SQLException;
 

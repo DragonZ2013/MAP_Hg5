@@ -41,6 +41,8 @@ public class Main {
         connection.close();
 
         System.out.println(cr.getAll());
+
+        System.out.println(cr.getObject(4));
         System.out.println(cr.getObject(1));
         System.out.println(cr.getObject(2));
         System.out.println(cr.getObject(5));
@@ -53,7 +55,6 @@ public class Main {
         c.setMaxEnrollment(30);
         cr.update(c);
         System.out.println(cr.getObject(3));
-        System.out.println(cr.getObject(4));
 
     }
 }

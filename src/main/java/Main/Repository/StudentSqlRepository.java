@@ -18,8 +18,8 @@ public class StudentSqlRepository implements CrudRepository<Student>{
     }
 
     @Override
-    public Student create(Student obj) {
-        return null;
+    public void create(Student obj) {
+
     }
 
     @Override
@@ -28,8 +28,7 @@ public class StudentSqlRepository implements CrudRepository<Student>{
     }
 
     @Override
-    public Student update(Student obj) {
-        return null;
+    public void update(Student obj) {
     }
 
     @Override
