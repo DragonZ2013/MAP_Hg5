@@ -58,12 +58,28 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     }
 
     @Override
-    public Course update(Course obj) {
+    public Course update(Course obj) throws SQLException {
+
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
+        String query = "update courses set coursename=?,teacherid=?,maxenrollment=?,credits=? where id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(5,obj.getCourseId());
+        preparedStatement.setString(1,obj.getName());
+        preparedStatement.setInt(2,obj.getTeacher());
+        preparedStatement.setInt(3,obj.getMaxEnrollment());
+        preparedStatement.setInt(4,obj.getCredits());
+
+        preparedStatement.execute();
         return null;
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
+        String query = "delete from courses where id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1,id);
+        preparedStatement.execute();
 
     }
 

@@ -45,8 +45,13 @@ public class Main {
         System.out.println(cr.getObject(2));
         System.out.println(cr.getObject(5));
         System.out.println(cr.getObject(6));
-        //Course c = new Course("Sisteme de operare",3,20,new ArrayList<>(),35,3);
-        //cr.create(c);
+        cr.delete(3);
+        System.out.println(cr.getObject(3));
+        Course c = new Course("Sisteme de operare",3,20,new ArrayList<>(),35,3);
+        cr.create(c);
+        System.out.println(cr.getObject(3));
+        c.setMaxEnrollment(30);
+        cr.update(c);
         System.out.println(cr.getObject(3));
         System.out.println(cr.getObject(4));
 

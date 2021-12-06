@@ -12,9 +12,9 @@ public interface CrudRepository<T> {
 
     List<T> getAll() throws SQLException;
 
-    T update(T obj);
+    T update(T obj) throws SQLException;
 
-    void delete(int id);
+    void delete(int id) throws SQLException;
 
     void close() throws IOException;
 }
