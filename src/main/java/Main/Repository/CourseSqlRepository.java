@@ -73,7 +73,7 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     }
 
     /**
-     * Updates an element in the MySQL database with the same Id as param course
+     * Updates an element in the MySQL database with the same id as param course
      * @param obj
      * @throws SQLException
      */
@@ -93,26 +93,26 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     }
 
     /**
-     * removes the element with given id from the MySQL database
+     * removes the course with given id from the MySQL database, returns null if object doesn't exist
      * @param id
      * @throws SQLException
      */
     @Override
     public void delete(int id) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
-        String collapseQuery = "delete from enrolledstudents where courseid=?";
-        PreparedStatement preparedStatementCollapse = connection.prepareStatement(collapseQuery);
+        //String collapseQuery = "delete from enrolledstudents where courseid=?";
+        //PreparedStatement preparedStatementCollapse = connection.prepareStatement(collapseQuery);
         String query = "delete from courses where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1,id);
-        preparedStatementCollapse.setInt(1,id);
-        preparedStatementCollapse.execute();
+        //preparedStatementCollapse.setInt(1,id);
+        //preparedStatementCollapse.execute();
         preparedStatement.execute();
 
     }
 
     /**
-     * Returns the element from the database with the given Id
+     * Returns the course from the database with the given id
      * @param id
      * @return
      * @throws SQLException

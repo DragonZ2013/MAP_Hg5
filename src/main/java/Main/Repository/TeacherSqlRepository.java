@@ -19,12 +19,23 @@ public class TeacherSqlRepository implements CrudRepository<Teacher>{
     private String connUser;
     private String connPassword;
 
+    /**
+     * Constructor for TeacherSqlRepository
+     * @param connUrl
+     * @param connUser
+     * @param connPassword
+     */
     public TeacherSqlRepository(String connUrl, String connUser, String connPassword) {
         this.connUrl = connUrl;
         this.connUser = connUser;
         this.connPassword = connPassword;
     }
 
+    /**
+     * Adds a teacher to the MySQL database
+     * @param obj
+     * @throws SQLException
+     */
     @Override
     public void create(Teacher obj) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
@@ -36,6 +47,11 @@ public class TeacherSqlRepository implements CrudRepository<Teacher>{
         preparedStatement.execute();
     }
 
+    /**
+     * Returns the array of teachers from the MySQL database
+     * @return
+     * @throws SQLException
+     */
     @Override
     public List<Teacher> getAll() throws SQLException {
         List<Teacher> teacherList= new ArrayList<Teacher>();
@@ -51,6 +67,11 @@ public class TeacherSqlRepository implements CrudRepository<Teacher>{
         return teacherList;
     }
 
+    /**
+     * Updates the teacher in the MySQL database with the same id as param teacher
+     * @param obj
+     * @throws SQLException
+     */
     @Override
     public void update(Teacher obj) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
@@ -63,6 +84,11 @@ public class TeacherSqlRepository implements CrudRepository<Teacher>{
         preparedStatement.execute();
     }
 
+    /**
+     * removes the teacher with given id from the MySQL database
+     * @param id
+     * @throws SQLException
+     */
     @Override
     public void delete(int id) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
@@ -73,6 +99,12 @@ public class TeacherSqlRepository implements CrudRepository<Teacher>{
 
     }
 
+    /**
+     * Returns the teacher from the database with the given id, returns null if object doesn't exist
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Teacher getObject(int id) throws SQLException {
         Teacher retTeacher = null;

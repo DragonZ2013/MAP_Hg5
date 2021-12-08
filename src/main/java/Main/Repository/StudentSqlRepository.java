@@ -14,12 +14,23 @@ public class StudentSqlRepository implements CrudRepository<Student>{
     private String connUser;
     private String connPassword;
 
+    /**
+     * Constructor for StudentSqlRepository
+     * @param connUrl
+     * @param connUser
+     * @param connPassword
+     */
     public StudentSqlRepository(String connUrl, String connUser, String connPassword) {
         this.connUrl = connUrl;
         this.connUser = connUser;
         this.connPassword = connPassword;
     }
 
+    /**
+     * Adds a student to the MySQL database
+     * @param obj
+     * @throws SQLException
+     */
     @Override
     public void create(Student obj) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
@@ -33,6 +44,11 @@ public class StudentSqlRepository implements CrudRepository<Student>{
 
     }
 
+    /**
+     * Returns the array of students from the MySQL database
+     * @return
+     * @throws SQLException
+     */
     @Override
     public List<Student> getAll() throws SQLException {
         List<Student> studentList= new ArrayList<Student>();
@@ -53,6 +69,12 @@ public class StudentSqlRepository implements CrudRepository<Student>{
         return studentList;
     }
 
+    /**
+     * Updates an element in the MySQL database with the same id as param student
+     * Also used for Student registration
+     * @param obj
+     * @throws SQLException
+     */
     @Override
     public void update(Student obj) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
@@ -73,20 +95,31 @@ public class StudentSqlRepository implements CrudRepository<Student>{
         preparedStatement.execute();
     }
 
+    /**
+     * removes the student with given id from the MySQL database
+     * @param id
+     * @throws SQLException
+     */
     @Override
     public void delete(int id) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
         String query = "delete from students where id=?";
-        String collapseQuery = "delete from enrolledstudents where studentid=?";
-        PreparedStatement preparedStatementCollapse = connection.prepareStatement(collapseQuery);
+        //String collapseQuery = "delete from enrolledstudents where studentid=?";
+        //PreparedStatement preparedStatementCollapse = connection.prepareStatement(collapseQuery);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1,id);
-        preparedStatementCollapse.setInt(1,id);
-        preparedStatementCollapse.execute();
+        //preparedStatementCollapse.setInt(1,id);
+        //preparedStatementCollapse.execute();
         preparedStatement.execute();
 
     }
 
+    /**
+     * Returns the student from the database with the given id, returns null if object doesn't exist
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Student getObject(int id) throws SQLException {
         Student retStudent= null;
