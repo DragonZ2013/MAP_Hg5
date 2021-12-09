@@ -16,5 +16,4 @@ public interface CrudRepository<T> {
 
     void delete(int id) throws SQLException;
 
-    void close() throws IOException;
 }

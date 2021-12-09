@@ -27,7 +27,7 @@ public class Controller {
      * @param sr
      * @throws IOException
      */
-    public Controller(CrudRepository<Course> cr, CrudRepository<Teacher> tr, CrudRepository<Student> sr) throws IOException {
+    public Controller(CrudRepository<Course> cr, CrudRepository<Teacher> tr, CrudRepository<Student> sr)  {
         this.cr = cr;
         this.tr = tr;
         this.sr = sr;
@@ -176,7 +176,8 @@ public class Controller {
     }
 
     /**
-     * removes a teacher object from the teacher repository, will not delete if any course depends on given teacher (WIP - to decide if collapse is necessary)
+     * removes a teacher object from the teacher repository, will not delete if any course depends on given teacher
+     * TODO: decide if collapse/cascade is necessary
      * @param teacherId
      * @throws MissingIdException
      */

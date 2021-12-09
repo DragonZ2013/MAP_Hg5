@@ -1,11 +1,7 @@
 package Main.Repository;
 
 import Main.Model.Course;
-import Main.Model.Student;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +32,7 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     @Override
     public void create(Course obj) throws SQLException {
 
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
+        Connection connection = DriverManager.getConnection(connUrl,connUser,connPassword);
         String query = "insert into courses(id,coursename,teacherid,maxenrollment,credits) values(?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1,obj.getCourseId());
@@ -45,29 +41,36 @@ public class CourseSqlRepository implements CrudRepository<Course>{
         preparedStatement.setInt(4,obj.getMaxEnrollment());
         preparedStatement.setInt(5,obj.getCredits());
         preparedStatement.execute();
+
+        preparedStatement.close();
+        connection.close();
     }
 
     /**
      * Returns the array of courses from the MySQL database
-     * @return
+     * @return List<Course>
      * @throws SQLException
      */
     @Override
     public List<Course> getAll() throws SQLException {
-        List<Course> courseList= new ArrayList<Course>();
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
+        List<Course> courseList= new ArrayList<>();
+        Connection connection = DriverManager.getConnection(connUrl,connUser,connPassword);
         Statement statement = connection.createStatement();
         Statement innerStatement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from courses");
         while(resultSet.next()){
-            Course tempCourse = new Course(resultSet.getString("coursename"),resultSet.getInt("teacherid"),resultSet.getInt("maxenrollment"),new ArrayList<Integer>(),resultSet.getInt("credits"),resultSet.getInt("id"));
+            Course tempCourse = new Course(resultSet.getString("coursename"),resultSet.getInt("teacherid"),resultSet.getInt("maxenrollment"),new ArrayList<>(),resultSet.getInt("credits"),resultSet.getInt("id"));
             ResultSet enrolledStudents = innerStatement.executeQuery("select * from enrolledstudents where courseid = "+resultSet.getInt("id") );
             while(enrolledStudents.next()){
                 tempCourse.getStudentsEnrolled().add(enrolledStudents.getInt("studentid"));
             }
             courseList.add(tempCourse);
+            enrolledStudents.close();
         }
 
+        statement.close();
+        innerStatement.close();
+        resultSet.close();
         connection.close();
         return courseList;
     }
@@ -80,7 +83,7 @@ public class CourseSqlRepository implements CrudRepository<Course>{
     @Override
     public void update(Course obj) throws SQLException {
 
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
+        Connection connection = DriverManager.getConnection(connUrl,connUser,connPassword);
         String query = "update courses set coursename=?,teacherid=?,maxenrollment=?,credits=? where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(5,obj.getCourseId());
@@ -88,8 +91,10 @@ public class CourseSqlRepository implements CrudRepository<Course>{
         preparedStatement.setInt(2,obj.getTeacher());
         preparedStatement.setInt(3,obj.getMaxEnrollment());
         preparedStatement.setInt(4,obj.getCredits());
-
         preparedStatement.execute();
+
+        preparedStatement.close();
+        connection.close();
     }
 
     /**
@@ -99,45 +104,44 @@ public class CourseSqlRepository implements CrudRepository<Course>{
      */
     @Override
     public void delete(int id) throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
-        //String collapseQuery = "delete from enrolledstudents where courseid=?";
-        //PreparedStatement preparedStatementCollapse = connection.prepareStatement(collapseQuery);
+        Connection connection = DriverManager.getConnection(connUrl,connUser,connPassword);
         String query = "delete from courses where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1,id);
-        //preparedStatementCollapse.setInt(1,id);
-        //preparedStatementCollapse.execute();
         preparedStatement.execute();
+
+        preparedStatement.close();
+        connection.close();
 
     }
 
     /**
      * Returns the course from the database with the given id
      * @param id
-     * @return
+     * @return Course
      * @throws SQLException
      */
     @Override
     public Course getObject(int id) throws SQLException {
         Course retCourse = null;
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mapsqlproject","root","1234");
+        Connection connection = DriverManager.getConnection(connUrl,connUser,connPassword);
         Statement statement = connection.createStatement();
         Statement innerStatement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from courses where id= "+ id);
         while(resultSet.next()){
-            retCourse = new Course(resultSet.getString("coursename"),resultSet.getInt("teacherid"),resultSet.getInt("maxenrollment"),new ArrayList<Integer>(),resultSet.getInt("credits"),resultSet.getInt("id"));
+            retCourse = new Course(resultSet.getString("coursename"),resultSet.getInt("teacherid"),resultSet.getInt("maxenrollment"),new ArrayList<>(),resultSet.getInt("credits"),resultSet.getInt("id"));
             ResultSet enrolledStudents = innerStatement.executeQuery("select * from enrolledstudents where courseid = "+resultSet.getInt("id") );
             while(enrolledStudents.next()){
                 retCourse.getStudentsEnrolled().add(enrolledStudents.getInt("studentid"));
             }
+            enrolledStudents.close();
         }
 
+        statement.close();
+        innerStatement.close();
+        resultSet.close();
         connection.close();
         return retCourse;
     }
 
-    @Override
-    public void close() throws IOException {
-
-    }
 }

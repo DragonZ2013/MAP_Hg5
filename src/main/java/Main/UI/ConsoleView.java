@@ -20,10 +20,9 @@ public class ConsoleView {
     }
 
     /**
-     * Mainloop function for Console Application - WIP: Exception Handling
-     * @throws ExistentIdException
+     * Mainloop function for Console Application
      */
-    public void Run() throws ExistentIdException, MissingIdException, MaxSizeException, IOException {
+    public void Run() {
         Scanner scanner = new Scanner(System.in);
         String teacherFirstName,teacherLastName,courseName,studentFirstName,studentLastName;
         int teacherId,courseId,studentId,filterParam,continueLoop=1,courseTeacherId,courseMaxEnrollment,courseCredits,studentTotalCredits;
