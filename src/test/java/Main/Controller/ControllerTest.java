@@ -72,7 +72,7 @@ class ControllerTest {
 
 
     @org.junit.jupiter.api.Test
-    void testCourse() throws SQLException, MissingIdException {
+    void testCourseGet() throws SQLException, MissingIdException {
         assertEquals(4,controller.listCourses().size());
 
         assertEquals(1,controller.listCourses().get(0).getCourseId());
@@ -91,21 +91,20 @@ class ControllerTest {
         assertEquals(15,controller.listCourses().get(3).getCredits());
         assertEquals(1,controller.listCourses().get(3).getStudentsEnrolled().size());
 
-        MissingIdException thrownMissingIdException1 = assertThrows(MissingIdException.class,() -> controller.deleteCourse(5));
-        assertEquals("Course with given Id doesn't exist",thrownMissingIdException1.getMessage());
 
-        MissingIdException thrownMissingIdException2 = assertThrows(MissingIdException.class,() -> controller.updateCourse("tempname1",1,10,30,5));
-        assertEquals("Course with given Id doesn't exist",thrownMissingIdException2.getMessage());
+    }
 
-        MissingIdException thrownMissingIdException3 = assertThrows(MissingIdException.class,() -> controller.updateCourse("tempname2",4,10,30,1));
-        assertEquals("Teacher with given Id doesn't exist",thrownMissingIdException3.getMessage());
-
+    @org.junit.jupiter.api.Test
+    void testCourseFilter() throws SQLException, MissingIdException {
         assertEquals(4,controller.filterCourses(9).size());
         assertEquals(3,controller.filterCourses(14).size());
         assertEquals(2,controller.filterCourses(29).size());
         assertEquals(1,controller.filterCourses(44).size());
         assertEquals(0,controller.filterCourses(46).size());
+    }
 
+    @org.junit.jupiter.api.Test
+    void testCourseSort() throws SQLException, MissingIdException {
         assertEquals(3,controller.sortCourses().get(0).getCourseId());
         assertEquals(4,controller.sortCourses().get(1).getCourseId());
         assertEquals(1,controller.sortCourses().get(2).getCourseId());
@@ -113,7 +112,23 @@ class ControllerTest {
     }
 
     @org.junit.jupiter.api.Test
-    void testTeacher() throws SQLException, MissingIdException {
+    void testCourseUpdate() throws SQLException, MissingIdException {
+        MissingIdException thrownMissingIdException1 = assertThrows(MissingIdException.class,() -> controller.updateCourse("tempname1",1,10,30,5));
+        assertEquals("Course with given Id doesn't exist",thrownMissingIdException1.getMessage());
+
+        MissingIdException thrownMissingIdException2 = assertThrows(MissingIdException.class,() -> controller.updateCourse("tempname2",4,10,30,1));
+        assertEquals("Teacher with given Id doesn't exist",thrownMissingIdException2.getMessage());
+    }
+
+    @org.junit.jupiter.api.Test
+    void testCourseDelete() throws SQLException, MissingIdException {
+        MissingIdException thrownMissingIdException1 = assertThrows(MissingIdException.class,() -> controller.deleteCourse(5));
+        assertEquals("Course with given Id doesn't exist",thrownMissingIdException1.getMessage());
+    }
+
+
+    @org.junit.jupiter.api.Test
+    void testTeacherGet() throws SQLException, MissingIdException {
         assertEquals(3,controller.listTeachers().size());
 
         assertEquals(1,controller.listTeachers().get(0).getTeacherId());
@@ -121,13 +136,20 @@ class ControllerTest {
         assertEquals(2,controller.listTeachers().get(1).getTeacherId());
 
         assertEquals(3,controller.listTeachers().get(2).getTeacherId());
+    }
 
+    @org.junit.jupiter.api.Test
+    void testTeacherDelete() throws SQLException, MissingIdException {
         MissingIdException thrownMissingIdException1 = assertThrows(MissingIdException.class,()->controller.deleteTeacher(4));
         assertEquals("Teacher with given Id doesn't exist",thrownMissingIdException1.getMessage());
-
-        MissingIdException thrownMissingIdException2 = assertThrows(MissingIdException.class,()->controller.updateTeacher("teachertestfirstname","teachertestlastname",4));
-        assertEquals("Teacher with given Id doesn't exist",thrownMissingIdException2.getMessage());
-
     }
+
+    @org.junit.jupiter.api.Test
+    void testTeacherUpdate() throws SQLException, MissingIdException {
+        MissingIdException thrownMissingIdException1 = assertThrows(MissingIdException.class,()->controller.updateTeacher("teachertestfirstname","teachertestlastname",4));
+        assertEquals("Teacher with given Id doesn't exist",thrownMissingIdException1.getMessage());
+    }
+
+
 
 }
