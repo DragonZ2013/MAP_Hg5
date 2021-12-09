@@ -106,6 +106,7 @@ public class Controller {
 
     /**
      * Modifies a student object from the StudentRepository
+     * TODO: decide if totalCredits should be removed from params so credits are exclusively modified when students register to courses
      * @param firstName
      * @param lastName
      * @param studentId
@@ -194,7 +195,7 @@ public class Controller {
     public void deleteStudent(int studentId) throws MissingIdException, SQLException {
         Student tempStudent = sr.getObject(studentId);
         if(tempStudent==null)
-            throw new MissingIdException("Course with given Id doesn't exist");
+            throw new MissingIdException("Student with given Id doesn't exist");
         sr.delete(studentId);
     }
 
@@ -249,7 +250,7 @@ public class Controller {
 
 
     /**
-     * Returns the list of students sorted by their LastName - WIP - FirstName sorting, thenComparing breaks
+     * Returns the list of students sorted by their LastName then their FirstName sorting
      * @return retList List<Student>
      */
     public List<Student> sortStudents() throws SQLException {

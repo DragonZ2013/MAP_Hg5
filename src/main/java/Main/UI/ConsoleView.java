@@ -105,7 +105,7 @@ public class ConsoleView {
                         studentLastName= scanner.next();
                         System.out.println("Give Student Id");
                         studentId=Integer.parseInt(scanner.next());
-                        System.out.println("Give Student Max Credits");
+                        System.out.println("Give Student Total Credits");
                         studentTotalCredits=Integer.parseInt(scanner.next());
                         controller.updateStudent(studentFirstName,studentLastName,studentId,studentTotalCredits);
                         break;
