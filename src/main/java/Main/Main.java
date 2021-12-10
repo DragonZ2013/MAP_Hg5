@@ -1,15 +1,10 @@
 package Main;
 
 import Main.Controller.Controller;
-import Main.Exceptions.ExistentIdException;
-import Main.Exceptions.MaxSizeException;
-import Main.Exceptions.MissingIdException;
 
 import Main.Repository.*;
 import Main.UI.ConsoleView;
 
-import java.io.IOException;
-import java.sql.*;
 
 public class Main {
 

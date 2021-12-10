@@ -43,7 +43,7 @@ public class Controller {
     public void createTeacher(String firstName,String lastName,int teacherId) throws ExistentIdException, SQLException {
         for(Teacher t: tr.getAll())
             if(t.getTeacherId()==teacherId)
-                throw new ExistentIdException("Teacher Id is already in array");
+                throw new ExistentIdException("Teacher with given Id already exist");
         Teacher t = new Teacher(firstName,lastName,teacherId);
         tr.create(t);
     }
@@ -58,7 +58,7 @@ public class Controller {
     public void createStudent(String firstName,String lastName,int studentId) throws ExistentIdException, SQLException {
         for(Student s: sr.getAll())
             if(s.getStudentId()==studentId)
-                throw new ExistentIdException("Student Id is already in array");
+                throw new ExistentIdException("Student with given Id already exist");
         Student s = new Student(firstName,lastName,studentId,0,new ArrayList<>());
         sr.create(s);
 
@@ -77,7 +77,7 @@ public class Controller {
     public void createCourse(String name,int teacherId,int maxEnrollment,int credits,int courseId) throws ExistentIdException, MissingIdException, SQLException {
         for(Course c: cr.getAll())
             if(c.getCourseId()==courseId)
-                throw new ExistentIdException("Course Id is already in array");
+                throw new ExistentIdException("Course with given Id already exist");
         Teacher teacher = null;
         teacher = tr.getObject(teacherId);
         if(teacher==null)
